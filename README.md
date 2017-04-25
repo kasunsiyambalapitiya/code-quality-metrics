@@ -20,17 +20,21 @@ Since there is no Github REST API yet deployed for obtaining blame details of fi
 * [Java](http://www.oracle.com/technetwork/java/javase/downloads/index-jsp-138363.html) installed.
 * [Apache Maven](https://maven.apache.org/download.cgi) installed.
 
-After cloning or downloading the repository open `Eclipse IDE` or `IntelliJ IDEA` and open project’s `pom.xml`(Import all the dependencies if required).
 
 ## Running Samples
 It is required to provide the relevant WSO2 patch name as a command line argument to obtain relevant authors and reviewers of code lines been modified from the given patch.
 
+After cloning or downloading the repository perform one of the following,
+ 1. Navigate to projects `pom.xml` location through terminal and run `mvn package` , once `BUILD SUCCESS` appears navigate to project's `target` directory and run `java -jar code-quality-metrics-1.0.0-SNAPSHOT.jar <patchId>` (replace `<patchId>` with the specified patch)
+ 2. Run `Eclipse IDE` or `IntelliJ IDEA` and open project’s `pom.xml` then run `Application.main` with providing relevant patch id as a command line argument (Import all the dependencies if required).
+
+
 Run following samples and check with outputs,
 
 1. WSO2-CARBON-PATCH-4.4.0-0680   
-    Authors : [Lakmali, Amila De Silva, lalaji, Chamila]  
+    Authors : [lalaji(), Chamila(Chamila Adhikarinayake), Lakmali(Lakmali Erandi), Amila De Silva()]  
     Approved Users: []  
-    Commented Users:[]  
+    Commented Users: []  
     
     Note : Since this is an old patch reviewers of bug lines are not present as github protected branch feature was used by WSO2 from 2017 onwards.
 2. WSO2-CARBON-PATCH-4.4.0-1134  
@@ -41,8 +45,8 @@ Run following samples and check with outputs,
     Note : Since this patch only introduce new files to the repository, no authors of bug lines are shown.
 
 3. WSO2-CARBON-PATCH-4.4.0-1102  
-    Authors: [nuwandiw, Pasindu Nivanthaka Tennage, godwin]  
-    Approved Users: [darshanasbg]  
+    Authors: [nuwandiw(), Pasindu Nivanthaka Tennage(Pasindu Nivanthaka Tennage), godwin(Godwin Amila Shrimal)]  
+    Approved Users: [darshanasbg(Darshana Gunawardana)]  
     Commented Users: []  
     
     Note: Since this patch has modified lines added after enabling protected branch feature on master branches, the application provides the approved user of the bug lines as “darshanasbg” and there are no commented users on those lines.
