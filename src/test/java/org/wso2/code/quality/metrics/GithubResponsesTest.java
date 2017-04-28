@@ -94,7 +94,7 @@ public class GithubResponsesTest {
                 Collections.singletonList("wso2/wso2-axis2-transports"));
         commitHashWithRepoNames.forEach((commitHash, repository) -> {
             try {
-                String jsonText = GithubApiCallerUtils.callSearchCommitApi(commitHash, githubToken);
+                String jsonText = GithubAPIInvokerUtils.callSearchCommitApi(commitHash, githubToken);
                 Method saveRepoNamesMethod = changesFinderClass.getDeclaredMethod("getRepoNames", String.class);
                 saveRepoNamesMethod.setAccessible(true);
                 Object changesFinder = changesFinderClass.newInstance();
@@ -111,7 +111,7 @@ public class GithubResponsesTest {
 
     @Test
     public void testSavePrNumberAndRepoName() throws CodeQualityMetricsException {
-        String jsonText = GithubApiCallerUtils.callSearchIssueApi
+        String jsonText = GithubAPIInvokerUtils.callSearchIssueApi
                 ("0015c02145c8ec6d3bba433f2fb5e850e1d25846", githubToken);
         Map<String, Set<Integer>> expectedPrNoWithRepoName = new HashMap<>();
         Set<Integer> expectedPrSet = new HashSet<>();

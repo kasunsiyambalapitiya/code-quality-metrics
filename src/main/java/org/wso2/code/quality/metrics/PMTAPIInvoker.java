@@ -31,7 +31,7 @@ import java.util.Properties;
  *
  * @since 1.0.0
  */
-public class PmtApiCaller {
+public class PMTAPIInvoker {
 
     /**
      * Used for calling the WSO2 PMT REST API.
@@ -44,7 +44,7 @@ public class PmtApiCaller {
     public String callApi(String accessToken, String patchId) throws CodeQualityMetricsException {
         HttpGet httpGet;
         Properties defaultProperties = new Properties();
-        try (InputStream inputStream = PmtApiCaller.class.getResourceAsStream("/code.quality.metrics.properties")) {
+        try (InputStream inputStream = PMTAPIInvoker.class.getResourceAsStream("/code.quality.metrics.properties")) {
             defaultProperties.load(inputStream);
             String pmtApiUrl = defaultProperties.getProperty("pmt.API.url");
             String pmtUrl = pmtApiUrl + patchId;
@@ -56,6 +56,6 @@ public class PmtApiCaller {
             throw new CodeQualityMetricsException("IO exception occurred when loading the inputstream to the " +
                     "properties object", e);
         }
-        return ApiUtility.invokeApi(httpGet);
+        return APIUtility.invokeApi(httpGet);
     }
 }

@@ -76,7 +76,7 @@ public class ChangesFinder {
     Set<String> obtainRepoNamesForCommitHashes(String gitHubToken, List<String> commitHashes) {
         commitHashes.forEach(commitHash -> {
             try {
-                String jsonText = GithubApiCallerUtils.callSearchCommitApi(commitHash, gitHubToken);
+                String jsonText = GithubAPIInvokerUtils.callSearchCommitApi(commitHash, gitHubToken);
                 List<String> repoLocations = getRepoNames(jsonText);
                 identifyChangedFile(repoLocations, commitHash, gitHubToken);
             } catch (CodeQualityMetricsException e) {
@@ -180,7 +180,7 @@ public class ChangesFinder {
         String previousCommitOfFile = null;
         try {
             // need check whether the given commit has more than 2 parent commits
-            String singleCommitJsonText = GithubApiCallerUtils.callSingleCommitApi(repositoryName, latestCommitHash,
+            String singleCommitJsonText = GithubAPIInvokerUtils.callSingleCommitApi(repositoryName, latestCommitHash,
                     githubToken);
             SingleCommitApiResponse singleCommitApiResponse = gson.fromJson(singleCommitJsonText,
                     SingleCommitApiResponse.class);
@@ -225,7 +225,7 @@ public class ChangesFinder {
         String previousCommitOfFile = null;
         Map<String, String> commitWithDate = new HashMap<>();
         try {
-            String commitHistoryJsonText = GithubApiCallerUtils.callCommitHistoryApi(repositoryName, filePath,
+            String commitHistoryJsonText = GithubAPIInvokerUtils.callCommitHistoryApi(repositoryName, filePath,
                     githubToken);
             Type listType = new ListType().getType();
             List<CommitHistoryApiResponse> commitHistoryApiResponses = gson.fromJson(commitHistoryJsonText,
@@ -293,7 +293,7 @@ public class ChangesFinder {
             String jsonText;
             try {
                 // calling the graphql API for getting blame information for the current file.
-                jsonText = GithubApiCallerUtils.callGraphqlApi(jsonStructure, githubToken);
+                jsonText = GithubAPIInvokerUtils.callGraphqlApi(jsonStructure, githubToken);
                 findAuthorCommits(jsonText, fileNamesWithDeletedLineNumbers, fileName);
             } catch (CodeQualityMetricsException e) {
                 logger.error(e.getMessage(), e.getCause());
@@ -390,7 +390,7 @@ public class ChangesFinder {
             String tempIdentifiableAuthorName = authorName;
             if (!loginName.isEmpty()) {
                 try {
-                    String jsonText = GithubApiCallerUtils.invokeUserDetailsAPIForLoginName(loginName, githubToken);
+                    String jsonText = GithubAPIInvokerUtils.invokeUserDetailsAPIForLoginName(loginName, githubToken);
                     UserDetails userDetails = gson.fromJson(jsonText, UserDetails.class);
                     String fullName = userDetails.getUserName();
                     if (fullName != null && !fullName.isEmpty()) {

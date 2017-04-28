@@ -81,11 +81,11 @@ public class CodeQualityMetricsExecutor {
      * @return List of commit hashes contained in the given patch
      */
     List<String> findCommitHashesInPatch() throws CodeQualityMetricsException {
-        PmtApiCaller pmtApiCaller = new PmtApiCaller();
+        PMTAPIInvoker pmtApiInvoker = new PMTAPIInvoker();
         String jsonText;
         List<String> commitHashes = new ArrayList<>();
         try {
-            jsonText = pmtApiCaller.callApi(pmtToken, patchId);
+            jsonText = pmtApiInvoker.callApi(pmtToken, patchId);
             Gson gson = new Gson();
             List pmtResponse = gson.fromJson(jsonText, List.class);
             for (Object pmtEntry : pmtResponse) {

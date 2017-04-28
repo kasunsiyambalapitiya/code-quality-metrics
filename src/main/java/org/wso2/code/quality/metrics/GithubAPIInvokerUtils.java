@@ -25,9 +25,13 @@ import org.apache.log4j.Logger;
 import org.json.JSONObject;
 import org.wso2.code.quality.metrics.exceptions.CodeQualityMetricsException;
 
+import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import static org.wso2.code.quality.metrics.model.Constants.ACCEPT;
@@ -39,19 +43,19 @@ import static org.wso2.code.quality.metrics.model.Constants.BEARER;
  *
  * @since 1.0.0
  */
-public final class GithubApiCallerUtils {
-    private static final Logger logger = Logger.getLogger(GithubApiCallerUtils.class);
+public final class GithubAPIInvokerUtils {
+    private static final Logger logger = Logger.getLogger(GithubAPIInvokerUtils.class);
     private static final Properties defaultProperties = new Properties();
 
     /**
      * To prevent instantiation from other classes
      */
-    private GithubApiCallerUtils() {
+    private GithubAPIInvokerUtils() {
     }
 
     //for loading the properties file
     static {
-        try (InputStream inputStream = GithubApiCallerUtils.class.getResourceAsStream("/code.quality.metrics" +
+        try (InputStream inputStream = GithubAPIInvokerUtils.class.getResourceAsStream("/code.quality.metrics" +
                 ".properties")) {
             defaultProperties.load(inputStream);
         } catch (IOException e) {
@@ -80,7 +84,7 @@ public final class GithubApiCallerUtils {
             throw new CodeQualityMetricsException("The url provided for accessing the Github Search Commit API is " +
                     "invalid ", e);
         }
-        return ApiUtility.invokeApi(httpGet);
+        return APIUtility.invokeApi(httpGet);
     }
 
     /**
@@ -97,14 +101,18 @@ public final class GithubApiCallerUtils {
         HttpGet httpGet;
         try {
             String tempUrl = defaultProperties.getProperty("commit.history.API.url");
-            String url = tempUrl.replaceFirst("REPO_LOCATION", repoLocation).replaceFirst("FILE_NAME", filePath);
-            httpGet = new HttpGet(url);
+            Map<String, String> parameters = new HashMap<>();
+            parameters.put("repoLocation", repoLocation);
+            parameters.put("fileName", filePath);
+            UriBuilder builder = UriBuilder.fromPath(tempUrl);
+            URI uri = builder.buildFromMap(parameters);
+            httpGet = new HttpGet(uri);
             httpGet.addHeader(AUTHORIZATION, BEARER + githubAccessToken);
         } catch (IllegalArgumentException e) {
             throw new CodeQualityMetricsException("The url provided for accessing the Github Search Commit API is " +
                     "invalid ", e);
         }
-        return ApiUtility.invokeApi(httpGet);
+        return APIUtility.invokeApi(httpGet);
     }
 
     /**
@@ -120,14 +128,18 @@ public final class GithubApiCallerUtils {
         HttpGet httpGet;
         try {
             String tempUrl = defaultProperties.getProperty("single.commit.API.url");
-            String url = tempUrl.replaceFirst("REPO_LOCATION", repoLocation).replaceFirst("COMMIT_HASH", commitHash);
-            httpGet = new HttpGet(url);
+            Map<String, String> parameters = new HashMap<>();
+            parameters.put("repoLocation", repoLocation);
+            parameters.put("commitHash", commitHash);
+            UriBuilder builder = UriBuilder.fromPath(tempUrl);
+            URI uri = builder.buildFromMap(parameters);
+            httpGet = new HttpGet(uri);
             httpGet.addHeader(AUTHORIZATION, BEARER + githubAccessToken);
         } catch (IllegalArgumentException e) {
             throw new CodeQualityMetricsException("The url provided for accessing the Github Search Commit API is " +
                     "invalid ", e);
         }
-        return ApiUtility.invokeApi(httpGet);
+        return APIUtility.invokeApi(httpGet);
 
     }
 
@@ -145,16 +157,19 @@ public final class GithubApiCallerUtils {
         HttpGet httpGet;
         try {
             String tempUrl = defaultProperties.getProperty("review.API.url");
-            String url = tempUrl.replaceFirst("REPO_LOCATION", repoLocation).replaceFirst("PULL_REQUEST_NUMBER",
-                    String.valueOf(pullRequestNumber));
-            httpGet = new HttpGet(url);
+            Map<String, String> parameters = new HashMap<>();
+            parameters.put("repoLocation", repoLocation);
+            parameters.put("pullRequestNumber", Integer.toString(pullRequestNumber));
+            UriBuilder builder = UriBuilder.fromPath(tempUrl);
+            URI uri = builder.buildFromMap(parameters);
+            httpGet = new HttpGet(uri);
             httpGet.addHeader(ACCEPT, defaultProperties.getProperty("review.API.url.header"));
             httpGet.addHeader(AUTHORIZATION, BEARER + githubAccessToken);
         } catch (IllegalArgumentException e) {
             throw new CodeQualityMetricsException("The url provided for accessing the Github Review Commit API is " +
                     "invalid ", e);
         }
-        return ApiUtility.invokeApi(httpGet);
+        return APIUtility.invokeApi(httpGet);
     }
 
     /**
@@ -177,7 +192,7 @@ public final class GithubApiCallerUtils {
             throw new CodeQualityMetricsException("The url provided for accessing the Github Search Issue API is " +
                     "invalid ", e);
         }
-        return ApiUtility.invokeApi(httpGet);
+        return APIUtility.invokeApi(httpGet);
     }
 
     /**
@@ -205,7 +220,7 @@ public final class GithubApiCallerUtils {
             throw new CodeQualityMetricsException("An error occurred when creating the String entity from Json " +
                     "Structure", e);
         }
-        return ApiUtility.invokeGraphQlApi(httpPost);
+        return APIUtility.invokeGraphQlApi(httpPost);
     }
 
     /**
@@ -226,7 +241,7 @@ public final class GithubApiCallerUtils {
             throw new CodeQualityMetricsException("The url provided for accessing the Github User details REST API is" +
                     " invalid", e);
         }
-        return ApiUtility.invokeApi(httpGet);
+        return APIUtility.invokeApi(httpGet);
     }
 
     public static String invokeUserDetailsAPIForLoginName(String loginName, String githubToken)
@@ -240,6 +255,6 @@ public final class GithubApiCallerUtils {
             throw new CodeQualityMetricsException("The url provided for accessing the Github User details REST API is" +
                     " invalid", e);
         }
-        return ApiUtility.invokeApi(httpGet);
+        return APIUtility.invokeApi(httpGet);
     }
 }

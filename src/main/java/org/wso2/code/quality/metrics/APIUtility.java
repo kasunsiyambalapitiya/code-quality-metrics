@@ -38,11 +38,11 @@ import java.nio.charset.StandardCharsets;
  *
  * @since 1.0.0
  */
-public final class ApiUtility {
-    private static final Logger logger = Logger.getLogger(ApiUtility.class);
+public final class APIUtility {
+    private static final Logger logger = Logger.getLogger(APIUtility.class);
 
     // to prevent instantiation
-    private ApiUtility() {
+    private APIUtility() {
     }
 
     /**

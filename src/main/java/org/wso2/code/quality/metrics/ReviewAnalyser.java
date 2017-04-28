@@ -69,7 +69,7 @@ public class ReviewAnalyser {
         authorCommits.forEach(commitHash -> {
             String jsonText;
             try {
-                jsonText = GithubApiCallerUtils.callSearchIssueApi(commitHash, githubToken);
+                jsonText = GithubAPIInvokerUtils.callSearchIssueApi(commitHash, githubToken);
                 Map<String, Set<Integer>> prNoWithRepoName = savePrNumberAndRepoName(jsonText);
                 if (logger.isDebugEnabled()) {
                     logger.debug("Relevant pull requests on patch " + commitHash + " with their relevant repository " +
@@ -126,7 +126,7 @@ public class ReviewAnalyser {
         prNoWithRepoName.forEach((repositoryName, prNumbers) -> prNumbers.parallelStream()
                 .forEach((Integer prNumber) -> {
                     try {
-                        String jsonText = GithubApiCallerUtils.callReviewApi(repositoryName, prNumber, githubToken);
+                        String jsonText = GithubAPIInvokerUtils.callReviewApi(repositoryName, prNumber, githubToken);
                         if (jsonText != null && !jsonText.isEmpty()) {
                             Type listType = new ListType().getType();
                             List<ReviewApiResponse> reviews = gson.fromJson(jsonText, listType);
@@ -205,7 +205,7 @@ public class ReviewAnalyser {
     private String getFullUserName(Integer reviewerUserIds, String githubToken) throws CodeQualityMetricsException {
         String fullUserName = null;
         try {
-            String jsonText = GithubApiCallerUtils.invokeUserDetailsAPIForUserId(reviewerUserIds, githubToken);
+            String jsonText = GithubAPIInvokerUtils.invokeUserDetailsAPIForUserId(reviewerUserIds, githubToken);
             UserDetails userDetails = gson.fromJson(jsonText, UserDetails.class);
             fullUserName = userDetails.getUserName();
         } catch (CodeQualityMetricsException e) {
